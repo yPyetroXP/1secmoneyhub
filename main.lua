@@ -1,7 +1,20 @@
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local GlobalEvents = ReplicatedStorage:WaitForChild("events-shared"):WaitForChild("network@GlobalEvents")
+
+local function waitForChild(parent, childName, timeout)
+    local startTime = os.time()
+    while os.time() - startTime < timeout do
+        local child = parent:FindFirstChild(childName)
+        if child then
+            return child
+        end
+        wait(0.1)  -- Aguarda um pequeno intervalo antes de verificar novamente
+    end
+    error("Timeout esperando por " .. childName)
+end
+
+local eventsShared = waitForChild(ReplicatedStorage, "events-shared", 10)  -- Timeout de 10 segundos
+
+local GlobalEvents = waitForChild(eventsShared, "network@GlobalEvents", 10)  -- Timeout de 10 segundos
 
 local Window = Rayfield:CreateWindow({
    Name = "1 SEC HUB",
